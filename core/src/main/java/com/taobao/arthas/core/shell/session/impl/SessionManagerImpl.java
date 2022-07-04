@@ -40,7 +40,8 @@ public class SessionManagerImpl implements SessionManager {
         this.jobController = jobController;
         this.sessions = new ConcurrentHashMap<String, Session>();
         this.sessionTimeoutMillis = options.getSessionTimeout();
-        this.consumerTimeoutMillis = 5 * 60 * 1000; // 5 minutes
+        //todo
+        this.consumerTimeoutMillis = 50 * 60 * 1000; // 5 minutes
         this.reaperInterval = options.getReaperInterval();
         this.instrumentation = options.getInstrumentation();
         this.pid = options.getPid();

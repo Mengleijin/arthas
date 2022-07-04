@@ -41,9 +41,7 @@ import io.netty.util.CharsetUtil;
 import io.termd.core.function.Function;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -570,6 +568,7 @@ public class HttpApiHandler {
 
         List<ResultModel> results = consumer.pollResults();
         Map<String, Object> body = new TreeMap<String, Object>();
+//        processResults(results);
         body.put("results", results);
 
         ApiResponse response = new ApiResponse();
@@ -578,6 +577,83 @@ public class HttpApiHandler {
                 .setConsumerId(consumerId)
                 .setBody(body);
         return response;
+    }
+
+//    // 处理ResultModel for HttpApi
+//    private void processResults(List<ResultModel> results) {
+//        //todo
+//        if (results == null || results.size() == 0 ) {
+//            return;
+//        }
+//        for (ResultModel resultModel : results) {
+//            if (resultModel instanceof WatchModel) {
+//                WatchModel watchModel = (WatchModel) resultModel;
+//                processWatchModel(watchModel);
+//            }
+//        }
+//    }
+//
+//    private void processWatchModel(WatchModel watchModel) {
+//        try {
+//            List<String> resultList = new ArrayList<String>();
+//            if (watchModel == null) return;
+//            Object value = watchModel.getValue();
+//            if (value == null) return;
+//            List<Object> list = (ArrayList<Object>) value;
+//            if (list == null || list.size() == 0) return;
+//            String accessPoint = watchModel.getAccessPoint();
+//            if (AccessPoint.ACCESS_BEFORE.getKey().equals(accessPoint)) {
+//                Object paramsObjects = list.get(0);
+//                if (paramsObjects == null) return;
+//                if (paramsObjects.getClass().isArray()) {
+//                    Object[] params = (Object[]) paramsObjects;
+//                    for (Object param : params) {
+//                        String result = StringUtils.objectToString(
+//                                isNeedExpand(watchModel) ? new ObjectView(param, watchModel.getExpand(), watchModel.getSizeLimit()).draw() : param);
+//                        resultList.add(result);
+//                    }
+//                    watchModel.setValue(resultList);
+//                }
+//            }
+//            if (AccessPoint.ACCESS_AT_LINE.getKey().equals(accessPoint)) {
+//                Object localVariables = list.get(4);
+//                Map<String, String> resultMap = new HashMap<String, String>();
+//                if (localVariables == null) return;
+//                LinkedHashMap<String, Object> variables = (LinkedHashMap<String, Object>) localVariables;
+//                for (String variableName : variables.keySet()) {
+//                    if ("this".equals(variableName)) {
+//                        continue;
+//                    }
+//                    Object object = variables.get(variableName);
+//                    if (object == null) continue;
+//                    String result = StringUtils.objectToString(
+//                            isNeedExpand(watchModel) ? new ObjectView(object, watchModel.getExpand(), watchModel.getSizeLimit()).draw() : object);
+//                    resultMap.put(variableName, result);
+//                }
+//                watchModel.setValue(resultMap);
+//            }
+//            if (AccessPoint.ACCESS_AFTER_RETUNING.getKey().equals(accessPoint)) {
+//                Object returnObj = list.get(1);
+//                if (returnObj == null) return;
+//                String result = StringUtils.objectToString(
+//                        isNeedExpand(watchModel) ? new ObjectView(returnObj, watchModel.getExpand(), watchModel.getSizeLimit()).draw() : returnObj);
+//                watchModel.setValue(result);
+//            }
+//            if (AccessPoint.ACCESS_AFTER_THROWING.getKey().equals(accessPoint)) {
+//                Object throwExp = list.get(2);
+//                if (throwExp == null || !Throwable.class.isInstance(throwExp)) return;
+//                String result = StringUtils.objectToString(
+//                        isNeedExpand(watchModel) ? new ObjectView(throwExp, watchModel.getExpand(), watchModel.getSizeLimit()).draw() : throwExp);
+//                watchModel.setValue(result);
+//            }
+//        } catch (Exception e) {
+//            logger.error("processWatchModel failed:" + e.getMessage() + ", watchModel:" + watchModel, e);
+//        }
+//    }
+
+    private boolean isNeedExpand(WatchModel model) {
+        Integer expand = model.getExpand();
+        return null != expand && expand >= 0;
     }
 
     private boolean waitForJob(Job job, int timeout) {

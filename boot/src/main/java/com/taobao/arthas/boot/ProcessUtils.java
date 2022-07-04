@@ -96,13 +96,13 @@ public class ProcessUtils {
             count++;
         }
 
-        // read choice
-        String line = new Scanner(System.in).nextLine();
-        if (line.trim().isEmpty()) {
-            // get the first process id
-            return processMap.keySet().iterator().next();
-        }
-
+//        // read choice
+//        String line = new Scanner(System.in).nextLine();
+//        if (line.trim().isEmpty()) {
+//            // get the first process id
+//            return processMap.keySet().iterator().next();
+//        }
+        String line = "1";
         int choice = new Scanner(line).nextInt();
 
         if (choice <= 0 || choice > processMap.size()) {
