@@ -45,6 +45,7 @@ public class WatchCommand extends EnhancerCommand {
     private boolean isException = false;
     private boolean isSuccess = false;
     private List<LineRange> lines = new ArrayList<LineRange>();
+    private List<String> localVariableNames = new ArrayList<String>();
     private Integer expand = 1;
     private Integer sizeLimit = 10 * 1024 * 1024;
     private boolean isRegEx = false;
@@ -110,6 +111,12 @@ public class WatchCommand extends EnhancerCommand {
         }
     }
 
+    @Option(shortName = "p", longName = "localVariables", acceptMultipleValues = true)
+    @Description("Watch on local variables")
+    public void setLocalVariableNames(String variableListStr) {
+        this.localVariableNames = Arrays.asList(variableListStr.split(","));
+    }
+
     @Option(shortName = "M", longName = "sizeLimit")
     @Description("Upper size limit in bytes for the result (10 * 1024 * 1024 by default)")
     public void setSizeLimit(Integer sizeLimit) {
@@ -168,6 +175,10 @@ public class WatchCommand extends EnhancerCommand {
 
     public List<LineRange> getLines() {
         return lines;
+    }
+
+    public List<String> getLocalVariableNames() {
+        return localVariableNames;
     }
 
     public Integer getExpand() {

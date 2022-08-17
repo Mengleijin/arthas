@@ -229,6 +229,7 @@ class WatchAdviceListener extends AdviceListenerAdapter {
 
     private void parseAtLine(WatchModel model, Object value, String[] split) {
         try {
+            List<String> localVariableNames = command.getLocalVariableNames();
             List<Object> list = (ArrayList<Object>) value;
             if (list != null && list.size() > 0) {
                 int varMapIndex = -1;
@@ -242,7 +243,8 @@ class WatchAdviceListener extends AdviceListenerAdapter {
                 LinkedHashMap<String, Object> variables = (LinkedHashMap<String, Object>) list.get(varMapIndex);
                 Map<String, String> resultMap = new HashMap<String, String>();
                 for (String variableName : variables.keySet()) {
-                    if ("this".equals(variableName)) {
+                    if ("this".equals(variableName) || (localVariableNames != null &&
+                            localVariableNames.size() > 0 && !localVariableNames.contains(variableName))) {
                         continue;
                     }
                     Object object = variables.get(variableName);
